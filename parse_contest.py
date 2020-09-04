@@ -5,7 +5,7 @@ from secret import cookie
 
 # Номера уже пройденных контестов: 18337, 18338, 18357, 18358, 18359, 18360,
 
-CONTEST = '18360'
+CONTEST = '18337'
 URL = f'https://contest.yandex.ru/contest/{CONTEST}/problems/'
 HOST = 'https://contest.yandex.ru'
 TEMPLATE = 'template.py'
@@ -64,19 +64,21 @@ def get_problem_data(html):
     problem_fixtures = {}
 
     for fixture in fixtures:
-        problem_fixtures[fixture.find('td').get_text()] = fixture.find_next('td').get_text()
+        _input = fixture.find('td').get_text()
+        _output = fixture.find('td').find_next('td').get_text()
+        problem_fixtures[_input] = _output
 
     return problem_title, problem_descr, problem_fixtures
 
 
 def convert_fix_dict_to_signature_format(fixtures):
     data = ''
-    for input, output in fixtures.items():
+    for _input, _output in fixtures.items():
         data += '\"\"\"\n'
-        data += input
-        data += '\"\"\", \"\"\"\n'
-        data += output
-        data += '\"\"\",\n'
+        data += _input
+        data += '\n\"\"\", \"\"\"\n'
+        data += _output
+        data += '\n\"\"\",\n'
     return data
 
 
